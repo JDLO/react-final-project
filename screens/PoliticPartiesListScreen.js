@@ -36,7 +36,7 @@ export default function PoliticPartiesListScreen() {
     React.useLayoutEffect(() => {
         navigation.setOptions({
             headerRight: () => (
-                <RN.Button title="Votar" onPress={() => navigation.navigate("CreatePoliticPartyScreen")} />
+                <RN.Button title="Agregar" onPress={() => navigation.navigate("CreatePoliticPartyScreen")} />
             ),
         });
     }, [navigation]);
