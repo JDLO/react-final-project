@@ -1,121 +1,82 @@
-import React from "react";
-import {View, Text, FlatList} from 'react-native';
+import * as React from "react";
+import * as RN from "react-native";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import { View, Text, FlatList } from 'react-native';
 
 import { useState, useEffect } from "react";
-import { firestore } from "../database/firebase";
+import { useNavigation } from "@react-navigation/native";
+import { database } from "../database/firebase";
+import Partido from "../components/Partido";
 
-const PoliticPartiesListScreen=() => {
-   return (
-        <View>
-            <Text>Listado de Votantes</Text>
-        </View>
-    )
-}
-// TypeError: 0, _firebase.firestore is not a function (it is Object)
-const UsersList1=() => {
-    const [data, setData]=useState();
-    const usersCollection = firestore().collection('Users').get();
-    setData(users.docs);
-    console.log(usersCollection.get());
-    return (
-        <View>
-            <Text>Listado de Partidos</Text>
-        </View>
-    )
-}
-export default PoliticPartiesListScreen;
-
-
-// ejemplo de https://www.youtube.com/watch?v=xDGpTY7cwhU
-// const UsersList=() => {
-//     const [data, setData]=useState()
-
-//     async function loadData(){
-//         try{
-//             const users =await firestore().collection('users').get()
-//             setData(users.docs)
-//         }catch(e){
-//             console.log(e)
-//         }
-//     }
-
-//     useEffect(() => {
-//         loadData();
-//     },[])
-
-// function renderItem({item}){
-//     return (
-//         <View style={{flexDirection: 'row', margin:10}}>
-//             <Text>{item.data().nombre}</Text>
-//             <Text>{item.data().email}</Text>
-//             <Text>{item.data().phone}</Text>
+// const PoliticPartiesListScreen=() => {
+//    return (
+//         <View>
+//             <Text>Listado de Votantes</Text>
 //         </View>
 //     )
 // }
-
-// return (
-//     <View style={{padding:10}}>
-//         <Text>Listado de Usuarios</Text>
-//         <FlatList data= {data} renderItem={renderItem} keyExtractor={item => item.nombre}>
-
-//         </FlatList>
-//     </View>
-// )
-// }
-
-// export default UsersList;
-
-// const UserList = (props) => {
-//     const [users, setUsers] = useState([]);  
-//     useEffect(() => {
-//         firestore.db.collection("users").onSnapshot((querySnapshot) => {
-//         const users = [];
-//         querySnapshot.docs.forEach((doc) => {
-//           const { name, email, phone } = doc.data();
-//           users.push({
-//             id: doc.id,
-//             name,
-//             email,
-//             phone,
-//           });
-//         });
-//         setUsers(users);
-//       });
-//     }, []);
-  
+// // TypeError: 0, _firebase.firestore is not a function (it is Object)
+// const UsersList1=() => {
+//     const [data, setData]=useState();
+//     const usersCollection = firestore().collection('Users').get();
+//     setData(users.docs);
+//     console.log(usersCollection.get());
 //     return (
-//     <View>
-//     <Text>Listado de Usuarios</Text>
+//         <View>
+//             <Text>Listado de Partidos</Text>
+//         </View>
+//     )
+// }
+// export default PoliticPartiesListScreen;
 
-//       <ScrollView>
-//         <Button
-//           onPress={() => props.navigation.navigate("CreateUserScreen")}
-//           title="Create User"
-//         />
-//         {users.map((user) => {
-//           return (
-//             <ListItem
-//               key={user.id}
-//               bottomDivider
-//               onPress={() => {
-//                 props.navigation.navigate("UserDetailScreen", {
-//                   userId: user.id,
-//                 });
-//               }}
-//             >
-//               <ListItem.Chevron />
-//               <Avatar.Image source={require("./images/divertida.jpg")} size={50} />
-//               <ListItem.Content>
-//                 <ListItem.Title>{user.name}</ListItem.Title>
-//                 <ListItem.Subtitle>{user.email}</ListItem.Subtitle>
-//               </ListItem.Content>
-//             </ListItem>
-//           );
-//         })}
-//       </ScrollView>
-//      </View>
-//     );
-//   };
-  
-//  export default UserList;
+export default function PoliticPartiesListScreen() {
+    const [politicParties, setPoliticParties] = React.useState([]);
+    const navigation = useNavigation();
 
+    React.useLayoutEffect(() => {
+        navigation.setOptions({
+            headerRight: () => (
+                <RN.Button title="Agregar" onPress={() => navigation.navigate("CreatePoliticPartyScreen")} />
+            ),
+        });
+    }, [navigation]);
+
+    React.useEffect(() => {
+        const unsubscribe = onSnapshot(collection(database, "partido"), (querySnapshot) => {
+            // onSnapshot is a listener that listens to changes in the database in realtime
+            console.log("querySnapshot unsusbscribe");
+            setPoliticParties(
+                querySnapshot.docs.map((doc) => ({
+                    id: doc.id,
+                    nombre: doc.data().nombre,
+                    // emoji: doc.data().emoji,
+                }))
+            );
+        });
+        return unsubscribe; // unsubscribe from the listener when the component is unmounting
+        // because it avoids memory leaks
+    }, []);
+
+    return (
+        <RN.View style={styles.container}>
+            <RN.ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
+                <RN.Text style={styles.title}>Partidos</RN.Text>
+                {politicParties.map((politicParty) => (
+                    <Partido key={politicParty.id} {...politicParty} />
+                ))}
+            </RN.ScrollView>
+        </RN.View>
+    );
+}
+
+const styles = RN.StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: "#F5F3F9",
+    },
+    title: {
+        fontSize: 32,
+        fontWeight: "bold",
+        margin: 16,
+    },
+});  

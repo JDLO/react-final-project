@@ -2,7 +2,7 @@ import React from "react";
 import {View, Text, FlatList} from 'react-native';
 
 import { useState, useEffect } from "react";
-import { firestore } from "../database/firebase";
+import { database } from "../database/firebase";
 
 const VotersListScreen=() => {
    return (
@@ -14,7 +14,7 @@ const VotersListScreen=() => {
 // TypeError: 0, _firebase.firestore is not a function (it is Object)
 const UsersList1=() => {
     const [data, setData]=useState();
-    const usersCollection = firestore().collection('Users').get();
+    const usersCollection = database().collection('Users').get();
     setData(users.docs);
     console.log(usersCollection.get());
     return (
