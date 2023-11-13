@@ -1,7 +1,7 @@
 import { View, Text, Button, TextInput, StyleSheet, ScrollView } from 'react-native';
 import React, { useState, setState } from 'react';
 
-import { firestore } from "../database/firebase";
+import { database, firestore } from "../database/firebase";
 import { addDoc, collection } from "@firebase/firestore";
 
 const CreateVoterScreen = (props) => {
@@ -46,7 +46,7 @@ const CreateVoterScreen = (props) => {
         }
 
         // Si todo va bien, guardarlo en la base de datos
-        const ref = collection(firestore, "votante");
+        const ref = collection(database, "votante");
         try {
             addDoc(ref, state);
         } catch (err) {
