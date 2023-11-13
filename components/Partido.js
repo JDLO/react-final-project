@@ -7,7 +7,7 @@ import { AntDesign } from '@expo/vector-icons';
 export default function Partido({
     id,
     nombre,
-    // emoji,
+    emoji,
 }) {
 
     const onDelete = () => {
@@ -23,7 +23,7 @@ export default function Partido({
         <RN.View>
             <RN.View style={styles.productContainer}>
                 <RN.View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                    {/* <RN.Text style={styles.emoji}>{emoji}</RN.Text> */}
+                    <RN.Text style={styles.emoji}>{emoji}</RN.Text>
                     <AntDesign onPress={onDelete} name="delete" size={24} color="black" />
                 </RN.View>
                 <RN.Text style={styles.name}>{nombre}</RN.Text>

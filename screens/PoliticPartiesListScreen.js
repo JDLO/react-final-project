@@ -49,7 +49,7 @@ export default function PoliticPartiesListScreen() {
                 querySnapshot.docs.map((doc) => ({
                     id: doc.id,
                     nombre: doc.data().nombre,
-                    // emoji: doc.data().emoji,
+                    emoji: doc.data().emoji,
                 }))
             );
         });
