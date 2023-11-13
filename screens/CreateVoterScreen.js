@@ -1,7 +1,7 @@
 import { View, Text, Button, TextInput, StyleSheet, ScrollView } from 'react-native';
 import React, { useState, setState } from 'react';
 
-import { database, firestore } from "../database/firebase";
+import { database } from "../database/firebase";
 import { addDoc, collection } from "@firebase/firestore";
 
 const CreateVoterScreen = (props) => {
@@ -54,7 +54,6 @@ const CreateVoterScreen = (props) => {
         }
         alert('Votante guardado');
         props.navigation.navigate('VotersListScreen');
-
     }
 
     return (
