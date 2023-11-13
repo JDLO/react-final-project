@@ -4,16 +4,26 @@ import CreateVoterScreen from "./screens/CreateVoterScreen";
 import VotersListScreen from "./screens/VotersListScreen";
 import PoliticPartiesListScreen from "./screens/PoliticPartiesListScreen";
 import CreatePoliticPartyScreen from "./screens/CreatePoliticPartyScreen";
+import Home from "./screens/Home";
 
 const Stack = createNativeStackNavigator();
 
 function MyStack() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="PoliticPartiesListScreen" component={PoliticPartiesListScreen} />
-      <Stack.Screen name="CreatePoliticPartyScreen" component={CreatePoliticPartyScreen} />
-      <Stack.Screen name="CreateVoterScreen" component={CreateVoterScreen} />
-      <Stack.Screen name="VotersListScreen" component={VotersListScreen} />
+      <Stack.Screen name="Home" component={Home} options={{ title: 'Casa' }} />
+      <Stack.Screen name="PoliticPartiesListScreen" 
+                    component={PoliticPartiesListScreen} 
+                    options={{ title: 'Partidos' }} />
+      <Stack.Screen name="CreatePoliticPartyScreen" 
+                    component={CreatePoliticPartyScreen}
+                    options={{ title: 'Crear partido' }} />
+      <Stack.Screen name="CreateVoterScreen" 
+                    component={CreateVoterScreen} 
+                    options={{ title: 'Crear votante' }}/>
+      <Stack.Screen name="VotersListScreen" 
+                    component={VotersListScreen} 
+                    options={{ title: 'Votantes' }} />
     </Stack.Navigator>
   )
 }
