@@ -10,9 +10,9 @@ const Stack = createNativeStackNavigator();
 function MyStack() {
   return (
     <Stack.Navigator>
+      <Stack.Screen name="CreatePoliticPartyScreen" component={CreatePoliticPartyScreen} />
       <Stack.Screen name="CreateVoterScreen" component={CreateVoterScreen} />
       <Stack.Screen name="VotersListScreen" component={VotersListScreen} />
-      <Stack.Screen name="CreatePoliticPartyScreen" component={CreatePoliticPartyScreen} />
       <Stack.Screen name="PoliticPartiesListScreen" component={PoliticPartiesListScreen} />
     </Stack.Navigator>
   )

@@ -1,7 +1,7 @@
 import { View, Text, Button, TextInput, StyleSheet, ScrollView } from 'react-native';
 import React, { useState, setState } from 'react';
 
-import { firestore } from "../database/firebase";
+import { database } from "../database/firebase";
 import { addDoc, collection } from "@firebase/firestore";
 
 const CreatePoliticPartyScreen = (props) => {
@@ -18,7 +18,7 @@ const CreatePoliticPartyScreen = (props) => {
             return;
         } 
         // Si todo va bien, guardarlo en la base de datos
-        const ref = collection(firestore, "partido");
+        const ref = collection(database, "partido");
         try {
             addDoc(ref, state);
         } catch (err) {
@@ -26,13 +26,12 @@ const CreatePoliticPartyScreen = (props) => {
         }
         alert('Partido politico guardado');
         props.navigation.navigate('PoliticPartiesListScreen');
-
     }
 
     return (
         <ScrollView>
             <View style={styles.inputGroup}>
-                <Text>Crear Partido Politicos</Text>
+                <Text>Crear Partido Político</Text>
             </View>
             <View style={styles.inputGroup}>
                 <TextInput placeholder='Nombre' onChangeText={(value) => setState({ ...state, nombre: value })} />
