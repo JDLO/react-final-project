@@ -1,121 +1,50 @@
+import { collection, onSnapshot } from "firebase/firestore";
 import React from "react";
-import {View, Text, FlatList} from 'react-native';
+import * as RN from "react-native";
+import { Text, View } from 'react-native';
 
-import { useState, useEffect } from "react";
-import { firestore } from "../database/firebase";
+import { useState } from "react";
+import { database } from "../database/firebase";
+import { useNavigation } from "@react-navigation/native";
+import Votante from "../components/Votante";
 
-const VotersListScreen=() => {
-   return (
-        <View>
-            <Text>Listado de Votantes</Text>
-        </View>
-    )
-}
-// TypeError: 0, _firebase.firestore is not a function (it is Object)
-const UsersList1=() => {
-    const [data, setData]=useState();
-    const usersCollection = firestore().collection('Users').get();
-    setData(users.docs);
-    console.log(usersCollection.get());
+const VotersListScreen = () => {
+
+    const [voters, setVoters] = useState([]);
+    const navigation = useNavigation();
+
+    React.useLayoutEffect(() => {
+        navigation.setOptions({
+          headerRight: () => (
+            <RN.Button title="Agregar" onPress={() => navigation.navigate("CreateVoterScreen")} />
+          ),
+        });
+      }, [navigation]);
+
+    React.useEffect(() => {
+        const unsubscribe = onSnapshot(collection(database, "votante"), (snapshot) => {
+            setVoters(
+                snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    dni: doc.data().dni,
+                    nombre: doc.data().nombre,
+                    apellidos: doc.data().apellidos,
+                    edad: doc.data().edad,
+                }))
+            );
+        })
+        return unsubscribe;
+    }, []);
+
     return (
-        <View>
-            <Text>Listado de Votantes</Text>
-        </View>
-    )
+        <RN.View>
+            <RN.ScrollView>
+                {voters.map(votante => (
+                    <Votante key={votante.id} {...votante} />
+                ))
+                }
+            </RN.ScrollView>
+        </RN.View>
+    );
 }
 export default VotersListScreen;
-
-
-// ejemplo de https://www.youtube.com/watch?v=xDGpTY7cwhU
-// const UsersList=() => {
-//     const [data, setData]=useState()
-
-//     async function loadData(){
-//         try{
-//             const users =await firestore().collection('users').get()
-//             setData(users.docs)
-//         }catch(e){
-//             console.log(e)
-//         }
-//     }
-
-//     useEffect(() => {
-//         loadData();
-//     },[])
-
-// function renderItem({item}){
-//     return (
-//         <View style={{flexDirection: 'row', margin:10}}>
-//             <Text>{item.data().nombre}</Text>
-//             <Text>{item.data().email}</Text>
-//             <Text>{item.data().phone}</Text>
-//         </View>
-//     )
-// }
-
-// return (
-//     <View style={{padding:10}}>
-//         <Text>Listado de Usuarios</Text>
-//         <FlatList data= {data} renderItem={renderItem} keyExtractor={item => item.nombre}>
-
-//         </FlatList>
-//     </View>
-// )
-// }
-
-// export default UsersList;
-
-// const UserList = (props) => {
-//     const [users, setUsers] = useState([]);  
-//     useEffect(() => {
-//         firestore.db.collection("users").onSnapshot((querySnapshot) => {
-//         const users = [];
-//         querySnapshot.docs.forEach((doc) => {
-//           const { name, email, phone } = doc.data();
-//           users.push({
-//             id: doc.id,
-//             name,
-//             email,
-//             phone,
-//           });
-//         });
-//         setUsers(users);
-//       });
-//     }, []);
-  
-//     return (
-//     <View>
-//     <Text>Listado de Usuarios</Text>
-
-//       <ScrollView>
-//         <Button
-//           onPress={() => props.navigation.navigate("CreateUserScreen")}
-//           title="Create User"
-//         />
-//         {users.map((user) => {
-//           return (
-//             <ListItem
-//               key={user.id}
-//               bottomDivider
-//               onPress={() => {
-//                 props.navigation.navigate("UserDetailScreen", {
-//                   userId: user.id,
-//                 });
-//               }}
-//             >
-//               <ListItem.Chevron />
-//               <Avatar.Image source={require("./images/divertida.jpg")} size={50} />
-//               <ListItem.Content>
-//                 <ListItem.Title>{user.name}</ListItem.Title>
-//                 <ListItem.Subtitle>{user.email}</ListItem.Subtitle>
-//               </ListItem.Content>
-//             </ListItem>
-//           );
-//         })}
-//       </ScrollView>
-//      </View>
-//     );
-//   };
-  
-//  export default UserList;
-
