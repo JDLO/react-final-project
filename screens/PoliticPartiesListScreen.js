@@ -30,7 +30,7 @@ import Partido from "../components/Partido";
 // export default PoliticPartiesListScreen;
 
 export default function PoliticPartiesListScreen() {
-    const [politicParties, setPoliticParties] = React.useState([]);
+    const [politicParties, setPoliticParties] = useState([]);
     const navigation = useNavigation();
 
     React.useLayoutEffect(() => {
