@@ -37,24 +37,22 @@ const CreatePoliticPartyScreen = (props) => {
 
     return (
         <ScrollView>
-            <View style={styles.inputGroup}>
-                <Text>Crear Partido Político</Text>
-            </View>
-            <RN.Text onPress={() => setIsOpen(true)} style={styles.emoji}>
-                {newItem.emoji}
-            </RN.Text>
-            <EmojiPicker
-                onEmojiSelected={handlePick}
-                open={isOpen}
-                onClose={() => setIsOpen(false)}
-            />
-            <View style={styles.inputGroup}>
-                <TextInput placeholder='Nombre' onChangeText={(value) => setNewItem({ ...newItem, nombre: value })} />
-            </View>
-            <View>
-                <Button title="Guardar Usuario" onPress={() => saveNewUser()} />
-            </View>
-
+            <RN.View style={styles.formGroup}>
+                <RN.Text onPress={() => setIsOpen(true)} style={styles.emoji}>
+                    {newItem.emoji}
+                </RN.Text>
+                <EmojiPicker
+                    onEmojiSelected={handlePick}
+                    open={isOpen}
+                    onClose={() => setIsOpen(false)}
+                />
+                <View style={styles.inputGroup}>
+                    <TextInput placeholder='Nombre' onChangeText={(value) => setNewItem({ ...newItem, nombre: value })} />
+                </View>
+                <View>
+                    <Button title="Guardar" onPress={() => saveNewUser()} />
+                </View>
+            </RN.View>
         </ScrollView>
     )
 
@@ -70,6 +68,19 @@ const styles = RN.StyleSheet.create({
     title: {
         fontSize: 32,
         fontWeight: "700",
+    },
+    formGroup: {
+        borderRadius: 10,
+        padding: 10,
+        margin: 10,
+        backgroundColor: 'rgba(255, 255, 255,0.5)',
+    },
+    inputGroup: {
+        flex: 1,
+        padding: 0,
+        marginBottom: 15,
+        borderBottomWidth: 1,
+        borderBottomColor: '#cccccc'
     },
     inputContainer: {
         width: "90%",

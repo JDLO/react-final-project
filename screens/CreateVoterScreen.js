@@ -1,8 +1,8 @@
-import { View, Text, Button, TextInput, StyleSheet, ScrollView } from 'react-native';
-import React, { useState, setState } from 'react';
+import React, { useState } from 'react';
+import { Button, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 
-import { database } from "../database/firebase";
 import { addDoc, collection } from "@firebase/firestore";
+import { database } from "../database/firebase";
 
 const CreateVoterScreen = (props) => {
     const [state, setState] = useState({
@@ -20,6 +20,9 @@ const CreateVoterScreen = (props) => {
         alert('FALTA COMPROBAR QUE NO EXISTE UN VOTANTE CON ESTE DNI');
         if (state.dni === '') {
             alert('Votante sin DNI');
+            return;
+        } else if (state.dni.match('/^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE]$/i') === '') {
+            alert('DNI incorrecto');
             return;
         }
         if (state.nombre === '') {
@@ -41,6 +44,9 @@ const CreateVoterScreen = (props) => {
                 if (edad < 18) {
                     alert('El votante no puede ser menor de 18 años');
                     return;
+                } else if (edad > 100) {
+                    alert('El votante no puede ser mayor de 100 años');
+                    return;
                 }
             }
         }
@@ -57,27 +63,33 @@ const CreateVoterScreen = (props) => {
     }
 
     return (
-        <ScrollView>
-            <View style={styles.inputGroup}>
-                <Text>Crear Usuario</Text>
+        <ScrollView style={styles.container}>
+            <View style={styles.formGroup}>
+                <View style={styles.inputGroup}>
+                    <TextInput placeholder='DNI'
+                        onChangeText={(value) => setState({ ...state, dni: value })}
+                    />
+                </View>
+                <View style={styles.inputGroup}>
+                    <TextInput placeholder='Nombre'
+                        onChangeText={(value) => setState({ ...state, nombre: value })}
+                    />
+                </View>
+                <View style={styles.inputGroup}>
+                    <TextInput placeholder='Apellidos'
+                        onChangeText={(value) => setState({ ...state, apellidos: value })}
+                    />
+                </View>
+                <View style={styles.inputGroup}>
+                    <TextInput placeholder='Edad'
+                        keyboardType='numeric'
+                        onChangeText={(value) => setState({ ...state, edad: value })}
+                    />
+                </View>
+                <View style={styles.button}>
+                    <Button title="Guardar" onPress={() => saveNewUser()} />
+                </View>
             </View>
-            <View style={styles.inputGroup}>
-                <TextInput placeholder='DNI' onChangeText={(value) => setState({ ...state, dni: value })} />
-            </View>
-            <View style={styles.inputGroup}>
-                <TextInput placeholder='Nombre' onChangeText={(value) => setState({ ...state, nombre: value })} />
-            </View>
-            <View style={styles.inputGroup}>
-                <TextInput placeholder='Apellidos' onChangeText={(value) => setState({ ...state, apellidos: value })} />
-            </View>
-            <View style={styles.inputGroup}>
-                <TextInput placeholder='Edad' keyboardType='numeric' onChangeText={(value) => setState({ ...state, edad: value })} />
-            </View>
-
-            <View>
-                <Button title="Guardar Usuario" onPress={() => saveNewUser()} />
-            </View>
-
         </ScrollView>
     )
 
@@ -89,12 +101,22 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 35
     },
+    formGroup: {
+        // flex: 1,
+        borderRadius: 10,
+        padding: 10,
+        margin: 10,
+        backgroundColor: 'rgba(255, 255, 255,0.5)',
+    },
     inputGroup: {
-        flex: 1,
+        // flex: 1,
         padding: 0,
         marginBottom: 15,
         borderBottomWidth: 1,
         borderBottomColor: '#cccccc'
+    },
+    button: {
+        borderRadius: 10,
     }
 })
 
