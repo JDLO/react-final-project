@@ -5,12 +5,17 @@ import VotersListScreen from "./screens/VotersListScreen";
 import PoliticPartiesListScreen from "./screens/PoliticPartiesListScreen";
 import CreatePoliticPartyScreen from "./screens/CreatePoliticPartyScreen";
 import Home from "./screens/Home";
+import LoginScreen from "./screens/LoginScreen";
+import auth from '@react-native-firebase/auth';
 
 const Stack = createNativeStackNavigator();
 
 function MyStack() {
   return (
     <Stack.Navigator>
+      <Stack.Screen name="LoginScreen" 
+                    component={LoginScreen} 
+                    options={{ title: 'Login' }} />
       <Stack.Screen name="Home" component={Home} options={{ title: 'Casa' }} />
       <Stack.Screen name="PoliticPartiesListScreen" 
                     component={PoliticPartiesListScreen} 

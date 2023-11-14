@@ -3,20 +3,41 @@ import * as RN from 'react-native';
 import { database } from "../database/firebase";
 import { deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { AntDesign } from '@expo/vector-icons';
+import { useState, useEffect } from "react";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 
 export default function Partido({
     id,
     nombre,
     emoji,
+    dniVotante
 }) {
+
+    const [voto, setVoto] = useState({
+        idPartido: '',
+        fechaVotacion: '',
+    })
 
     const onDelete = () => {
         const docRef = doc(database, 'partido', id);
         deleteDoc(docRef);
     }
 
-    const onVote = () => {
+    const onVote = (id) => {
         console.log("VOTADO");
+
+        // const ref = collection(database, "voto");
+        // setVoto({
+        //     idPartido: id,
+        //     // idVotante: ,
+        //     fechaVotacion: new Date(),
+        // })
+        // try {
+        //     addDoc(ref, voto);
+        // } catch (err) {
+        //     console.log(err);
+        // }
+        // alert('Votación realizada');
     }
 
     return (
@@ -28,7 +49,7 @@ export default function Partido({
                 </RN.View>
                 <RN.Text style={styles.name}>{nombre}</RN.Text>
                 <RN.TouchableOpacity
-                    onPress={onVote}
+                    onPress={onVote({id})}
                     style={styles.button}>
                     <RN.Text style={styles.buttonText}>Votar</RN.Text>
                 </RN.TouchableOpacity>
