@@ -19,7 +19,7 @@ const LoginScreen = (props) => {
                 password
             ).then((userCredential) => {
                 console.log(userCredential.user);
-                props.navigation.navigate('PoliticPartiesListScreen');
+                props.navigation.navigate('Home');
             })
         } catch (error) {
             console.log(error);
@@ -34,7 +34,7 @@ const LoginScreen = (props) => {
                 password
             ).then((userCredential) => {
                 console.log(userCredential.user);
-                props.navigation.navigate('PoliticPartiesListScreen');
+                props.navigation.navigate('Home');
             })
         } catch (error) {
             console.log(error);
@@ -45,6 +45,7 @@ const LoginScreen = (props) => {
         signOut()
             .then(() => {
                 console.log('User account logged out!');
+                props.navigation.navigate('LoginScreen');
             })
             .catch(error => {
                 console.log(error);
