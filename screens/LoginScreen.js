@@ -1,10 +1,8 @@
+import React, { useEffect, useState } from 'react';
 import * as RN from 'react-native';
-import React, { useState, useEffect } from 'react';
 
 import { auth } from '../database/firebase';
 
-import { database } from "../database/firebase";
-import { addDoc, collection } from "@firebase/firestore";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 
 const LoginScreen = (props) => {
@@ -19,7 +17,7 @@ const LoginScreen = (props) => {
                 password
             ).then((userCredential) => {
                 console.log(userCredential.user);
-                props.navigation.navigate('Home');
+                props.navigation.navigate('HomePrincipal', {initial: true,});
             })
         } catch (error) {
             console.log(error);
@@ -34,7 +32,7 @@ const LoginScreen = (props) => {
                 password
             ).then((userCredential) => {
                 console.log(userCredential.user);
-                props.navigation.navigate('Home');
+                props.navigation.navigate('HomePrincipal', {initial: true,});
             })
         } catch (error) {
             console.log(error);
@@ -57,22 +55,27 @@ const LoginScreen = (props) => {
     return (
         <RN.View style={styles.container}>
             <RN.View style={styles.formGroup}>
-                <RN.View style={styles.inputGroup}>
-                    <RN.TextInput placeholder='usuario'
+            <RN.View style={styles.inputGroup}>
+                    <RN.TextInput placeholder='Usuario'
                         value={email}
                         onChangeText={text => setEmail(text)}
-                        style={{ backgroundColor: '#eee', marginVertical: 10 }}
+                        style={{ backgroundColor: '#F1F1F1', marginVertical: 10 }}
                     />
                 </RN.View>
                 <RN.View style={styles.inputGroup}>
                     <RN.TextInput secureTextEntry={true}
+                    placeholder='Contraseña'
                         value={password}
                         onChangeText={text => setPassword(text)}
-                        style={{ backgroundColor: '#eee', marginVertical: 10 }} />
+                        style={{ backgroundColor: '#F1F1F1', marginVertical: 10 }} />
+                </RN.View>
+                <RN.View style={styles.buttonGroup}>
+                    <RN.Button onPress={emailSignUp} title="Registrase" color="#29D02E" />
+                </RN.View>
+                <RN.View style={styles.buttonGroup}>
+                    <RN.Button onPress={emailSignIn} title="Iniciar sesión" />
                 </RN.View>
             </RN.View>
-            <RN.Button onPress={emailSignUp} title="Sign up" />
-            <RN.Button onPress={emailSignIn} title="Sign in" />
         </RN.View>
     )
 }
@@ -94,7 +97,11 @@ const styles = RN.StyleSheet.create({
         marginBottom: 15,
         borderBottomWidth: 1,
         borderBottomColor: '#cccccc'
-    }
+    },
+    buttonGroup: {
+        borderRadius: 10,
+        marginBottom: 10,
+    },
 })
 
 export default LoginScreen;
