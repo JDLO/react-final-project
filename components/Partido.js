@@ -1,43 +1,64 @@
 import * as React from 'react';
 import * as RN from 'react-native';
 import { database } from "../database/firebase";
-import { deleteDoc, doc, updateDoc } from 'firebase/firestore';
-import { AntDesign } from '@expo/vector-icons';
+import { addDoc, collection, doc, updateDoc } from "@firebase/firestore";
 import { useState, useEffect } from "react";
-import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+
 
 export default function Partido({
     id,
     nombre,
     emoji,
-    dniVotante
+    votante,
 }) {
-
+    const [haVotado, setHaVotado] = useState(false);
+    // Obtenemos el id del paritodo y la fecha actual
     const [voto, setVoto] = useState({
-        idPartido: '',
-        fechaVotacion: '',
+        idPartido: id,
+        fechaVotacion: new Date(),
     })
 
-    const onDelete = () => {
-        const docRef = doc(database, 'partido', id);
-        deleteDoc(docRef);
-    }
+    useEffect(() => {
+        // Verifica si votante es una referencia válida antes de intentar acceder a sus datos
+        if (votante && votante instanceof Object) {
+            setHaVotado(votante.data().hasVoted);
+        }
+    }, [votante]);
 
-    const onVote = (id) => {
-        console.log("VOTADO");
+    const onVote = async () => {
+        console.log("VOTANTE: " + votante.id + " " + votante.data().hasVoted);
+        // setHaVotado(votante.data().hasVoted);
+        console.log(haVotado);
+        if (haVotado) {
+            console.log('No puedes votar')
+            alert('Ya has votado, no puedes votar nuevamente.');
+            return;
+        }
 
-        // const ref = collection(database, "voto");
-        // setVoto({
-        //     idPartido: id,
-        //     // idVotante: ,
-        //     fechaVotacion: new Date(),
-        // })
-        // try {
-        //     addDoc(ref, voto);
-        // } catch (err) {
-        //     console.log(err);
-        // }
-        // alert('Votación realizada');
+        const ref = collection(database, "voto");
+        setVoto({
+            idPartido: id,
+            fechaVotacion: new Date(),
+        })
+        try {
+            // Agregamos el voto a la base de datos
+            console.log("Puedes votar y este es tu voto: ")
+            console.log(voto);
+            await addDoc(ref, voto);
+        } catch (err) {
+            console.log(err);
+        }
+
+
+        // console.log("VOTANTE: " + votante.id + " " + votante.data().hasVoted);
+        // Actualizo el usuario para que no vote mas
+        const userRef = doc(database, 'votante', votante.id);
+        await updateDoc(userRef, { hasVoted: true });
+        setHaVotado(true);
+
+        //TODO Falta actualizar el boton si ya ha votado
+
+        alert('Votación realizada');
     }
 
     return (
@@ -45,11 +66,10 @@ export default function Partido({
             <RN.View style={styles.productContainer}>
                 <RN.View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <RN.Text style={styles.emoji}>{emoji}</RN.Text>
-                    <AntDesign onPress={onDelete} name="delete" size={24} color="black" />
                 </RN.View>
                 <RN.Text style={styles.name}>{nombre}</RN.Text>
                 <RN.TouchableOpacity
-                    onPress={onVote({id})}
+                    onPress={() => onVote()}
                     style={styles.button}>
                     <RN.Text style={styles.buttonText}>Votar</RN.Text>
                 </RN.TouchableOpacity>
