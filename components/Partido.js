@@ -68,11 +68,11 @@ export default function Partido({
                     <RN.Text style={styles.emoji}>{emoji}</RN.Text>
                 </RN.View>
                 <RN.Text style={styles.name}>{nombre}</RN.Text>
-                <RN.TouchableOpacity
+                {!haVotado && <RN.TouchableOpacity
                     onPress={() => onVote()}
                     style={styles.button}>
                     <RN.Text style={styles.buttonText}>Votar</RN.Text>
-                </RN.TouchableOpacity>
+                </RN.TouchableOpacity>}
             </RN.View>
         </RN.View>
     )
