@@ -25,11 +25,11 @@ export default function Votante({
     return (
         <RN.View>
             <RN.View style={styles.productContainer}>
-                <RN.View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                {false && <RN.View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <RN.Text style={styles.name}>{dni}</RN.Text>
                     <AntDesign onPress={onDelete} name="delete" size={24} color="black" />
                     <AntDesign onPress={onEdit} name="edit" size={24} color="black" />
-                </RN.View>
+                </RN.View>}
                 <RN.Text style={styles.name}>{nombre}</RN.Text>
                 <RN.Text style={styles.name}>{apellidos}</RN.Text>
                 <RN.Text style={styles.price}>{edad}</RN.Text>
