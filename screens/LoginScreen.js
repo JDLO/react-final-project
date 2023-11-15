@@ -9,21 +9,6 @@ const LoginScreen = (props) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const emailSignUp = async () => {
-        try {
-            const user = await createUserWithEmailAndPassword(
-                auth,
-                email,
-                password
-            ).then((userCredential) => {
-                console.log(userCredential.user);
-                props.navigation.navigate('HomePrincipal', {initial: true,});
-            })
-        } catch (error) {
-            console.log(error);
-        };
-    }
-
     const emailSignIn = async () => {
         try {
             const user = await signInWithEmailAndPassword(
@@ -37,6 +22,10 @@ const LoginScreen = (props) => {
         } catch (error) {
             console.log(error);
         };
+    }
+
+    const goToCreateVoterScreen = () => {
+        props.navigation.navigate('CreateVoterScreen');
     }
 
     // useEffect to clear the fields on component mount or when the user signs out
@@ -76,6 +65,8 @@ const LoginScreen = (props) => {
                     <RN.Button onPress={emailSignIn} title="Iniciar sesión" />
                 </RN.View>
             </RN.View>
+            <RN.Button onPress={emailSignIn} title="Sign In" />
+            <RN.Button onPress={() => goToCreateVoterScreen()} title="Sign Up" />
         </RN.View>
     )
 }
