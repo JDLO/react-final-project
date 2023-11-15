@@ -59,14 +59,12 @@ const LoginScreen = (props) => {
                         style={{ backgroundColor: '#F1F1F1', marginVertical: 10 }} />
                 </RN.View>
                 <RN.View style={styles.buttonGroup}>
-                    <RN.Button onPress={emailSignUp} title="Registrase" color="#29D02E" />
+                    <RN.Button onPress={() => goToCreateVoterScreen()} title="Registrase" color="#29D02E" />
                 </RN.View>
                 <RN.View style={styles.buttonGroup}>
                     <RN.Button onPress={emailSignIn} title="Iniciar sesión" />
                 </RN.View>
             </RN.View>
-            <RN.Button onPress={emailSignIn} title="Sign In" />
-            <RN.Button onPress={() => goToCreateVoterScreen()} title="Sign Up" />
         </RN.View>
     )
 }
