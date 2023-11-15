@@ -44,36 +44,29 @@ export default function Home() {
             style={styles.backgroundImage}
         >
             <RN.View style={styles.container}>
-                {/* <RN.ScrollView contentContainerStyle={styles.listContainer}>
+                <RN.ScrollView contentContainerStyle={styles.scrollContainer}>
                     <RN.View style={styles.itemList}>
-                        <RN.Button
-                            title="Votantes"
+                        <CustomButton
+                            title="Partidos"
+                            icon="flag"
+                            onPress={() => navigation.navigate("PoliticPartiesListScreen")}
+                        />
+                    </RN.View>
+                    <RN.View style={styles.itemList}>
+                        <CustomButton 
+                            title="Votantes" 
+                            icon="users"
                             onPress={() => navigation.navigate("VotersListScreen")}
                         />
                     </RN.View>
                     <RN.View style={styles.itemList}>
-                        <RN.Button
-                            style={styles.itemList}
-                            title="Partidos"
+                        <CustomButton
+                            title="Resumen de Votos"
+                            icon="bar-chart"
                             onPress={() => navigation.navigate("PoliticPartiesListScreen")}
                         />
                     </RN.View>
-                    <RN.View style={styles.itemList}>
-                        <RN.Button
-                            style={styles.itemList}
-                            title="Resumen de la votación"
-                            onPress={() => navigation.navigate("PoliticPartiesListScreen")}
-                        />
-                    </RN.View>
-                    <RN.View style={styles.itemList}>
 
-                    </RN.View>
-
-                </RN.ScrollView> */}
-                <RN.ScrollView contentContainerStyle={styles.scrollContainer}>
-                    <CustomButton title="Votantes" icon="users" onPress={() => console.log('Votantes button pressed')} />
-                    <CustomButton title="Partidos" icon="flag" onPress={() => console.log('Partidos button pressed')} />
-                    <CustomButton title="Resumen de Votos" icon="bar-chart" onPress={() => console.log('Resumen de Votos button pressed')} />
                 </RN.ScrollView>
             </RN.View>
         </RN.ImageBackground>
