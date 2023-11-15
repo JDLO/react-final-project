@@ -18,40 +18,32 @@ export default function PoliticPartiesListScreen() {
     const authInstance = getAuth();
 
     const [user, setUser] = useState(null); // Añade el estado para almacenar el usuario
-
-    const [hasVoted, setHasVoted] = useState(false);
+    const [votante, setVotante] = useState(null);
 
     // Usa onAuthStateChanged para obtener el usuario actual
     useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged((user) => {
-            // Haz algo con el usuario (puede ser null si no hay usuario autenticado)
-            if (user) {
-                console.log(user?.uid);
-                setUser(user); // Guarda el usuario en el estado
-            }else {
-                console.log("No hay usuario autenticado");
-            }
-        });
-
-        // Devuelve la función de desuscripción para limpiar el efecto cuando el componente se desmonta
-        return unsubscribe;
-    }, [authInstance]);
-
-    useEffect(() => {
-        const checkIfUserHasVoted = async () => {
-            console.log(user?.uid);
-            if (user) {
-                // Ajusta la referencia según tu estructura de datos
-                const userRef = doc(database, 'votante', user.uid);
-                const userDoc = await getDoc(userRef);
-
-                if (userDoc.exists() && userDoc.data().hasVoted) {
-                    setHasVoted(true);
+        const fetchData = async () => {
+            const unsubscribe = auth.onAuthStateChanged(async (user) => {
+                // Haz algo con el usuario (puede ser null si no hay usuario autenticado)
+                if (user) {
+                    console.log(user?.uid);
+                    setUser(user); // Guarda el usuario en el estado
+    
+                    // Obtén el documento del votante
+                    const votanteDoc = await getDoc(doc(database, 'votante', user.uid));
+                    setVotante(votanteDoc);
+                } else {
+                    console.log("No hay usuario autenticado");
                 }
-            }
+            });
+    
+            // Devuelve la función de desuscripción para limpiar el efecto cuando el componente se desmonta
+            return unsubscribe;
         };
-        checkIfUserHasVoted();
-    }, [user]);
+    
+        // Llama a la función asincrónica
+        fetchData();
+    }, []);
 
     React.useLayoutEffect(() => {
         navigation.setOptions({
@@ -82,7 +74,7 @@ export default function PoliticPartiesListScreen() {
             <RN.ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
                 <RN.Text style={styles.title}>Partidos</RN.Text>
                 {politicParties.map((politicParty) => (
-                    <Partido key={politicParty.id} {...politicParty} hasVoted={hasVoted} userId={user.uid} />
+                    <Partido key={politicParty.id} {...politicParty} votante={votante} />
                 ))}
             </RN.ScrollView>
         </RN.View>

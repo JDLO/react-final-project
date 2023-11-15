@@ -1,26 +1,36 @@
 import * as React from 'react';
 import * as RN from 'react-native';
 import { database } from "../database/firebase";
-import { addDoc, collection } from "@firebase/firestore";
-import { useState } from "react";
+import { addDoc, collection, doc, updateDoc } from "@firebase/firestore";
+import { useState, useEffect } from "react";
 
 
 export default function Partido({
     id,
     nombre,
     emoji,
-    hasVotedProp, 
-    userId,
+    votante,
 }) {
-    // Obtenemos al usuario en sesión
-    const [hasVoted, setHasVoted] = useState(hasVotedProp);
+    const [haVotado, setHaVotado] = useState(false);
+    // Obtenemos el id del paritodo y la fecha actual
     const [voto, setVoto] = useState({
-        idPartido: '',
-        fechaVotacion: '',
+        idPartido: id,
+        fechaVotacion: new Date(),
     })
 
+    useEffect(() => {
+        // Verifica si votante es una referencia válida antes de intentar acceder a sus datos
+        if (votante && votante instanceof Object) {
+            setHaVotado(votante.data().hasVoted);
+        }
+    }, [votante]);
+
     const onVote = async () => {
-        if (hasVoted) {
+        console.log("VOTANTE: " + votante.id + " " + votante.data().hasVoted);
+        // setHaVotado(votante.data().hasVoted);
+        console.log(haVotado);
+        if (haVotado) {
+            console.log('No puedes votar')
             alert('Ya has votado, no puedes votar nuevamente.');
             return;
         }
@@ -32,16 +42,21 @@ export default function Partido({
         })
         try {
             // Agregamos el voto a la base de datos
+            console.log("Puedes votar y este es tu voto: ")
             console.log(voto);
             await addDoc(ref, voto);
         } catch (err) {
             console.log(err);
         }
 
+
+        // console.log("VOTANTE: " + votante.id + " " + votante.data().hasVoted);
         // Actualizo el usuario para que no vote mas
-        const userRef = doc(database, 'votante', userId);
+        const userRef = doc(database, 'votante', votante.id);
         await updateDoc(userRef, { hasVoted: true });
-        setHasVoted(true);
+        setHaVotado(true);
+
+        //TODO Falta actualizar el boton si ya ha votado
 
         alert('Votación realizada');
     }

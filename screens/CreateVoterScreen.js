@@ -69,6 +69,7 @@ const CreateVoterScreen = (props) => {
                     nombre: state.nombre,
                     apellidos: state.apellidos,
                     edad: state.edad,
+                    hasVoted: false,
                 });
                 console.log(userCredential.user);
             })
