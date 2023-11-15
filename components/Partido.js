@@ -1,43 +1,49 @@
 import * as React from 'react';
 import * as RN from 'react-native';
 import { database } from "../database/firebase";
-import { deleteDoc, doc, updateDoc } from 'firebase/firestore';
-import { AntDesign } from '@expo/vector-icons';
-import { useState, useEffect } from "react";
-import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import { addDoc, collection } from "@firebase/firestore";
+import { useState } from "react";
+
 
 export default function Partido({
     id,
     nombre,
     emoji,
-    dniVotante
+    hasVotedProp, 
+    userId,
 }) {
-
+    // Obtenemos al usuario en sesión
+    const [hasVoted, setHasVoted] = useState(hasVotedProp);
     const [voto, setVoto] = useState({
         idPartido: '',
         fechaVotacion: '',
     })
 
-    const onDelete = () => {
-        const docRef = doc(database, 'partido', id);
-        deleteDoc(docRef);
-    }
+    const onVote = async () => {
+        if (hasVoted) {
+            alert('Ya has votado, no puedes votar nuevamente.');
+            return;
+        }
 
-    const onVote = (id) => {
-        console.log("VOTADO");
+        const ref = collection(database, "voto");
+        setVoto({
+            idPartido: id,
+            fechaVotacion: new Date(),
+        })
+        try {
+            // Agregamos el voto a la base de datos
+            console.log(voto);
+            await addDoc(ref, voto);
+        } catch (err) {
+            console.log(err);
+        }
 
-        // const ref = collection(database, "voto");
-        // setVoto({
-        //     idPartido: id,
-        //     // idVotante: ,
-        //     fechaVotacion: new Date(),
-        // })
-        // try {
-        //     addDoc(ref, voto);
-        // } catch (err) {
-        //     console.log(err);
-        // }
-        // alert('Votación realizada');
+        // Actualizo el usuario para que no vote mas
+        const userRef = doc(database, 'votante', userId);
+        await updateDoc(userRef, { hasVoted: true });
+        setHasVoted(true);
+
+        alert('Votación realizada');
     }
 
     return (
@@ -45,11 +51,10 @@ export default function Partido({
             <RN.View style={styles.productContainer}>
                 <RN.View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <RN.Text style={styles.emoji}>{emoji}</RN.Text>
-                    <AntDesign onPress={onDelete} name="delete" size={24} color="black" />
                 </RN.View>
                 <RN.Text style={styles.name}>{nombre}</RN.Text>
                 <RN.TouchableOpacity
-                    onPress={onVote({id})}
+                    onPress={() => onVote()}
                     style={styles.button}>
                     <RN.Text style={styles.buttonText}>Votar</RN.Text>
                 </RN.TouchableOpacity>

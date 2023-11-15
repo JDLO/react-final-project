@@ -1,18 +1,23 @@
 import React, { useState } from 'react';
 import { Button, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 
-import { addDoc, collection } from "@firebase/firestore";
+import { setDoc, doc } from "@firebase/firestore";
 import { database } from "../database/firebase";
+import { auth } from '../database/firebase';
+
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 
 const CreateVoterScreen = (props) => {
     const [state, setState] = useState({
         dni: '',
         nombre: '',
         apellidos: '',
-        edad: ''
+        edad: '',
     })
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
-    const saveNewUser = () => {
+    const saveNewUser = async () => {
         console.log(state);
 
         // Validación de campos
@@ -51,15 +56,37 @@ const CreateVoterScreen = (props) => {
             }
         }
 
-        // Si todo va bien, guardarlo en la base de datos
-        const ref = collection(database, "votante");
         try {
-            addDoc(ref, state);
-        } catch (err) {
-            console.log(err);
-        }
+            // Guardar la autenticación
+            const user = await createUserWithEmailAndPassword(
+                auth,
+                email,
+                password
+            ).then(async (userCredential) => {
+                // Si todo va bien, guardar el votante
+                await setDoc(doc(database, "votante", userCredential.user.uid), {
+                    dni: state.dni,
+                    nombre: state.nombre,
+                    apellidos: state.apellidos,
+                    edad: state.edad,
+                });
+                console.log(userCredential.user);
+            })
+        } catch (error) {
+            console.log(error);
+        };
+
+
+        // Si todo va bien, guardarlo en la base de datos de votantes
+        // const ref = collection(database, "votante");
+        // try {
+        //     addDoc(ref, state);
+        // } catch (err) {
+        //     console.log(err);
+        // }
+
         alert('Votante guardado');
-        props.navigation.navigate('VotersListScreen');
+        props.navigation.navigate('Home');
     }
 
     return (
@@ -84,6 +111,19 @@ const CreateVoterScreen = (props) => {
                     <TextInput placeholder='Edad'
                         keyboardType='numeric'
                         onChangeText={(value) => setState({ ...state, edad: value })}
+                    />
+                </View>
+                <View style={styles.inputGroup}>
+                    <TextInput placeholder='Correo'
+                        value={email}
+                        keyboardType='email-address'
+                        onChangeText={text => setEmail(text)}
+                    />
+                </View>
+                <View style={styles.inputGroup}>
+                    <TextInput secureTextEntry={true}
+                        value={password}
+                        onChangeText={text => setPassword(text)}
                     />
                 </View>
                 <View style={styles.button}>

@@ -3,28 +3,11 @@ import React, { useState, useEffect } from 'react';
 
 import { auth } from '../database/firebase';
 
-import { database } from "../database/firebase";
-import { addDoc, collection } from "@firebase/firestore";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 
 const LoginScreen = (props) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
-    const emailSignUp = async () => {
-        try {
-            const user = await createUserWithEmailAndPassword(
-                auth,
-                email,
-                password
-            ).then((userCredential) => {
-                console.log(userCredential.user);
-                props.navigation.navigate('Home');
-            })
-        } catch (error) {
-            console.log(error);
-        };
-    }
 
     const emailSignIn = async () => {
         try {
@@ -39,6 +22,10 @@ const LoginScreen = (props) => {
         } catch (error) {
             console.log(error);
         };
+    }
+
+    const goToCreateVoterScreen = () => {
+        props.navigation.navigate('CreateVoterScreen');
     }
 
     // useEffect to clear the fields on component mount or when the user signs out
@@ -71,8 +58,8 @@ const LoginScreen = (props) => {
                         style={{ backgroundColor: '#eee', marginVertical: 10 }} />
                 </RN.View>
             </RN.View>
-            <RN.Button onPress={emailSignUp} title="Sign up" />
-            <RN.Button onPress={emailSignIn} title="Sign in" />
+            <RN.Button onPress={emailSignIn} title="Sign In" />
+            <RN.Button onPress={() => goToCreateVoterScreen()} title="Sign Up" />
         </RN.View>
     )
 }
