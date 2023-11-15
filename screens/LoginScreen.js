@@ -1,10 +1,8 @@
+import React, { useEffect, useState } from 'react';
 import * as RN from 'react-native';
-import React, { useState, useEffect } from 'react';
 
 import { auth } from '../database/firebase';
 
-import { database } from "../database/firebase";
-import { addDoc, collection } from "@firebase/firestore";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 
 const LoginScreen = (props) => {
@@ -19,7 +17,7 @@ const LoginScreen = (props) => {
                 password
             ).then((userCredential) => {
                 console.log(userCredential.user);
-                props.navigation.navigate('Home');
+                props.navigation.navigate('HomePrincipal', {initial: true,});
             })
         } catch (error) {
             console.log(error);
@@ -34,7 +32,7 @@ const LoginScreen = (props) => {
                 password
             ).then((userCredential) => {
                 console.log(userCredential.user);
-                props.navigation.navigate('Home');
+                props.navigation.navigate('HomePrincipal', {initial: true,});
             })
         } catch (error) {
             console.log(error);
