@@ -16,7 +16,9 @@ const VotersListScreen = () => {
     React.useLayoutEffect(() => {
         navigation.setOptions({
           headerRight: () => (
-            <RN.Button title="Agregar" onPress={() => navigation.navigate("CreateVoterScreen")} />
+            <RN.View style={{marginEnd: 10, borderRadius: 10}}>
+                <RN.Button title="Agregar" onPress={() => navigation.navigate("CreateVoterScreen")} />
+            </RN.View>
           ),
         });
       }, [navigation]);
