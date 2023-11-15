@@ -87,7 +87,7 @@ const CreateVoterScreen = (props) => {
         // }
 
         alert('Votante guardado');
-        props.navigation.navigate('Home');
+        props.navigation.navigate('HomePrincipal');
     }
 
     return (
