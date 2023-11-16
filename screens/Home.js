@@ -55,7 +55,7 @@ export default function Home() {
                     <RN.View style={styles.itemList}>
                         <CustomButton 
                             title="Votantes" 
-                            icon="users"
+                            icon="people"
                             onPress={() => navigation.navigate("VotersListScreen")}
                         />
                     </RN.View>
@@ -63,7 +63,7 @@ export default function Home() {
                         <CustomButton
                             title="Resumen de Votos"
                             icon="bar-chart"
-                            onPress={() => navigation.navigate("PoliticPartiesListScreen")}
+                            onPress={() => navigation.navigate("ResumeVotesListScreen")}
                         />
                     </RN.View>
 
