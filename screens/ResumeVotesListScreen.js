@@ -1,5 +1,5 @@
 import { collection, getDocs, onSnapshot, query, where } from '@firebase/firestore';
-import { useNavigation } from '@react-navigation/core';
+import { useFocusEffect, useNavigation } from '@react-navigation/core';
 import React, { useState } from 'react';
 import * as RN from 'react-native';
 import ResumeVotesPoliticParty from '../components/ResumeVotesPoliticParty';
@@ -9,7 +9,7 @@ const ResumeVotesListScreen = () => {
     const [politicParties, setPoliticParties] = useState([]);
     const navigation = useNavigation();
 
-    React.useEffect(() => {
+    useFocusEffect(() => {
         const fetchData = async () => {
             const partidoSnapshot = await getDocs(collection(database, "partido"));
             const promises = partidoSnapshot.docs.map(async (doc) => {
@@ -35,15 +35,13 @@ const ResumeVotesListScreen = () => {
         };
 
         const unsubscribe = onSnapshot(collection(database, "partido"), () => {
-            console.log("Query snapshot");
             fetchData();
         });
 
         return () => {
-            console.log("Unsubscribe");
             unsubscribe();
         };
-    }, []);
+    });
 
     return (
         <RN.View style={styles.container}>
