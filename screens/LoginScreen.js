@@ -4,7 +4,7 @@ import * as RN from 'react-native';
 import { auth } from '../database/firebase';
 
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { ALERT_TYPE, Dialog, AlertNotificationRoot, Toast } from 'react-native-alert-notification';
+import { ALERT_TYPE, Dialog, AlertNotificationRoot } from 'react-native-alert-notification';
 
 
 const LoginScreen = (props) => {
@@ -23,8 +23,9 @@ const LoginScreen = (props) => {
             })
         } catch (error) {
             console.log(error);
+            console.log('ERROR');
             Dialog.show({
-                type: ALERT_TYPE.DANGER,
+                type: ALERT_TYPE.WARNING,
                 title: 'Error',
                 textBody: '¡El inicio de sesión ha fallado! Por favor, verifica tus credenciales.',
                 button: 'Cerrar',
@@ -48,6 +49,8 @@ const LoginScreen = (props) => {
 
         return () => unsubscribe();
     }, []);
+
+    
 
     return (
         <AlertNotificationRoot>

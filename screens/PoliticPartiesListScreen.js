@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as RN from "react-native";
-import { collection, doc, getDoc, onSnapshot, orderBy, query } from "firebase/firestore";
+import { collection, doc, getDoc, onSnapshot } from "firebase/firestore";
 
 import { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -58,7 +58,7 @@ export default function PoliticPartiesListScreen() {
     React.useEffect(() => {
         const unsubscribe = onSnapshot(collection(database, "partido"), (querySnapshot) => {
             // onSnapshot is a listener that listens to changes in the database in realtime
-            console.log("querySnapshot unsusbscribe");
+            console.log("querySnapshot unsuscribe");
             setPoliticParties(
                 querySnapshot.docs.map((doc) => ({
                     id: doc.id,
