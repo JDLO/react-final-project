@@ -221,7 +221,8 @@ const CreateVoterScreen = (props) => {
                         />
                     </View>
                     <View style={styles.inputGroup}>
-                        <TextInput secureTextEntry={true}
+                        <TextInput placeholder='Contraseña' 
+                        secureTextEntry={true}
                             value={password}
                             onChangeText={text => setPassword(text)}
                         />
