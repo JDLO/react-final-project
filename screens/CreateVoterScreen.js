@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { ALERT_TYPE, Dialog, AlertNotificationRoot } from 'react-native-alert-notification';
 
-import { setDoc, doc } from "@firebase/firestore";
+import { setDoc, doc, getDocs, query, collection, where } from "@firebase/firestore";
 import { database } from "../database/firebase";
 import { auth } from '../database/firebase';
 
@@ -23,7 +23,16 @@ const CreateVoterScreen = (props) => {
 
         // Validación de campos
         //TODO Comprobar que no exista un votante con ese DNI -> HACER UN IF
-        alert('FALTA COMPROBAR QUE NO EXISTE UN VOTANTE CON ESTE DNI');
+        try {
+            const votnateSnapshot = await getDocs(query(collection(database, 'votante'), where('dni', '==', state.dni)));
+            console.log();
+            if(votnateSnapshot.size > 0){
+                alert('DNI existe');
+                return;
+            }
+        } catch (error) {
+            console.log(error);
+        }
         if (state.dni === '') {
             // alert('Votante sin DNI');
             Dialog.show({
