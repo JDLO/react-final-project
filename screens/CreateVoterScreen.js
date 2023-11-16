@@ -25,13 +25,24 @@ const CreateVoterScreen = (props) => {
         //TODO Comprobar que no exista un votante con ese DNI -> HACER UN IF
         try {
             const votnateSnapshot = await getDocs(query(collection(database, 'votante'), where('dni', '==', state.dni)));
-            console.log();
-            if(votnateSnapshot.size > 0){
-                alert('DNI existe');
+            if (votnateSnapshot.size > 0) {
+                Dialog.show({
+                    type: ALERT_TYPE.WARNING,
+                    title: 'Error',
+                    textBody: 'Ese DNI ya está registrado en el sistema.',
+                    button: 'Cerrar',
+                });
                 return;
             }
         } catch (error) {
             console.log(error);
+            Dialog.show({
+                type: ALERT_TYPE.DANGER,
+                title: 'Error',
+                textBody: 'Ha habido un error en el registro.',
+                button: 'Cerrar',
+            });
+            return;
         }
         if (state.dni === '') {
             // alert('Votante sin DNI');
@@ -170,23 +181,10 @@ const CreateVoterScreen = (props) => {
                 textBody: 'Ha habido un error en el registro.',
                 button: 'Cerrar',
             });
+            return;
         };
 
-
-        // Si todo va bien, guardarlo en la base de datos de votantes
-        // const ref = collection(database, "votante");
-        // try {
-        //     addDoc(ref, state);
-        // } catch (err) {
-        //     console.log(err);
-        // }
-
-        Dialog.show({
-            type: ALERT_TYPE.SUCCESS,
-            title: 'Error',
-            textBody: 'Se ha creado su cuenta.',
-            button: 'Cerrar',
-        });
+        alert('Se ha creado su cuenta.');
         props.navigation.navigate('HomePrincipal');
     }
 

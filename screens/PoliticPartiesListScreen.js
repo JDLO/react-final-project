@@ -5,6 +5,8 @@ import { collection, doc, getDoc, onSnapshot } from "firebase/firestore";
 import { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 
+import { useFocusEffect } from '@react-navigation/core';
+
 import { auth, database } from "../database/firebase";
 import { getAuth, onAuthStateChanged } from '@firebase/auth'; // Importa getAuth y onAuthStateChanged
 
@@ -20,15 +22,17 @@ export default function PoliticPartiesListScreen() {
     const [user, setUser] = useState(null); // Añade el estado para almacenar el usuario
     const [votante, setVotante] = useState(null);
 
+
+
     // Usa onAuthStateChanged para obtener el usuario actual
-    useEffect(() => {
+    useFocusEffect(() => {
         const fetchData = async () => {
             const unsubscribe = auth.onAuthStateChanged(async (user) => {
                 // Haz algo con el usuario (puede ser null si no hay usuario autenticado)
                 if (user) {
                     console.log(user?.uid);
                     setUser(user); // Guarda el usuario en el estado
-    
+
                     // Obtén el documento del votante
                     const votanteDoc = await getDoc(doc(database, 'votante', user.uid));
                     setVotante(votanteDoc);
@@ -36,19 +40,23 @@ export default function PoliticPartiesListScreen() {
                     console.log("No hay usuario autenticado");
                 }
             });
-    
+
             // Devuelve la función de desuscripción para limpiar el efecto cuando el componente se desmonta
             return unsubscribe;
         };
-    
+
         // Llama a la función asincrónica
-        fetchData();
-    }, []);
+        // fetchData();
+
+        return () => {
+            fetchData();
+        }
+    });
 
     React.useLayoutEffect(() => {
         navigation.setOptions({
             headerRight: () => (
-                <RN.View style={{marginEnd: 10, borderRadius: 10}}>
+                <RN.View style={{ marginEnd: 10, borderRadius: 10 }}>
                     <RN.Button title="Agregar" onPress={() => navigation.navigate("CreatePoliticPartyScreen")} />
                 </RN.View>
             ),
