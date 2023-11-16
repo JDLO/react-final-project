@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { ALERT_TYPE, Dialog, AlertNotificationRoot } from 'react-native-alert-notification';
 
 import { setDoc, doc, getDocs, query, collection, where } from "@firebase/firestore";
 import { database } from "../database/firebase";
@@ -24,45 +25,135 @@ const CreateVoterScreen = (props) => {
         //TODO Comprobar que no exista un votante con ese DNI -> HACER UN IF
         try {
             const votnateSnapshot = await getDocs(query(collection(database, 'votante'), where('dni', '==', state.dni)));
-            console.log();
-            if(votnateSnapshot.size > 0){
-                alert('DNI existe');
+            if (votnateSnapshot.size > 0) {
+                Dialog.show({
+                    type: ALERT_TYPE.WARNING,
+                    title: 'Error',
+                    textBody: 'Ese DNI ya está registrado en el sistema.',
+                    button: 'Cerrar',
+                });
                 return;
             }
         } catch (error) {
             console.log(error);
+            Dialog.show({
+                type: ALERT_TYPE.DANGER,
+                title: 'Error',
+                textBody: 'Ha habido un error en el registro.',
+                button: 'Cerrar',
+            });
+            return;
         }
         if (state.dni === '') {
-            alert('Votante sin DNI');
+            // alert('Votante sin DNI');
+            Dialog.show({
+                type: ALERT_TYPE.WARNING,
+                title: 'Error',
+                textBody: 'Debe introducir su DNI.',
+                button: 'Cerrar',
+            });
             return;
         } else if (state.dni.match('/^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE]$/i') === '') {
-            alert('DNI incorrecto');
+            Dialog.show({
+                type: ALERT_TYPE.WARNING,
+                title: 'Error',
+                textBody: 'DNI incorrecto.',
+                button: 'Cerrar',
+            });
             return;
         }
         if (state.nombre === '') {
-            alert('Votante sin nombre');
+            Dialog.show({
+                type: ALERT_TYPE.WARNING,
+                title: 'Error',
+                textBody: 'Debe introducir su nombre.',
+                button: 'Cerrar',
+            });
             return;
         } if (state.apellidos === '') {
-            alert('Votante sin apellidos');
+            Dialog.show({
+                type: ALERT_TYPE.WARNING,
+                title: 'Error',
+                textBody: 'Debe introducir sus apellidos.',
+                button: 'Cerrar',
+            });
             return;
         } if (state.edad === '') {
-            alert('Votante sin edad');
+            Dialog.show({
+                type: ALERT_TYPE.WARNING,
+                title: 'Error',
+                textBody: 'Debe introducir su edad.',
+                button: 'Cerrar',
+            });
             return;
         } else {
             if (isNaN(state.edad)) {    //Comprobamos si es un numero
-                alert('La edad tiene que ser un número');
+                Dialog.show({
+                    type: ALERT_TYPE.WARNING,
+                    title: 'Error',
+                    textBody: 'La edad debe de ser un número.',
+                    button: 'Cerrar',
+                });
                 return;
             } else {
                 // Comprobamos si el votante es menor de 18 años
                 let edad = parseInt(state.edad);
                 if (edad < 18) {
-                    alert('El votante no puede ser menor de 18 años');
+                    Dialog.show({
+                        type: ALERT_TYPE.WARNING,
+                        title: 'Error',
+                        textBody: 'No puede votar si tiene menos de 18 años.',
+                        button: 'Cerrar',
+                    });
                     return;
-                } else if (edad > 100) {
-                    alert('El votante no puede ser mayor de 100 años');
+                } else if (edad > 200) {
+                    Dialog.show({
+                        type: ALERT_TYPE.WARNING,
+                        title: 'Error',
+                        textBody: 'Su edad no puede ser superior a 200 años.',
+                        button: 'Cerrar',
+                    });
                     return;
                 }
             }
+        }
+        if (email === '') {
+            Dialog.show({
+                type: ALERT_TYPE.WARNING,
+                title: 'Error',
+                textBody: 'Debe introducir su correo electrónico.',
+                button: 'Cerrar',
+            });
+            return;
+        } else {
+            // comprobamos que el correo tenga @
+            if (email.indexOf('@') === -1) {
+                Dialog.show({
+                    type: ALERT_TYPE.WARNING,
+                    title: 'Error',
+                    textBody: 'El correo electrónico debe tener @',
+                    button: 'Cerrar',
+                });
+                return;
+            }
+        }
+        // comprobamos que existe la contraseña
+        if (password === '') {
+            Dialog.show({
+                type: ALERT_TYPE.WARNING,
+                title: 'Error',
+                textBody: 'Debe introducir una contraseña.',
+                button: 'Cerrar',
+            });
+            return;
+        } else if (password.length < 6) {
+            Dialog.show({
+                type: ALERT_TYPE.WARNING,
+                title: 'Error',
+                textBody: 'La contraseña debe tener al menos 6 caracteres.',
+                button: 'Cerrar',
+            });
+            return;
         }
 
         try {
@@ -84,63 +175,64 @@ const CreateVoterScreen = (props) => {
             })
         } catch (error) {
             console.log(error);
+            Dialog.show({
+                type: ALERT_TYPE.DANGER,
+                title: 'Error',
+                textBody: 'Ha habido un error en el registro.',
+                button: 'Cerrar',
+            });
+            return;
         };
 
-
-        // Si todo va bien, guardarlo en la base de datos de votantes
-        // const ref = collection(database, "votante");
-        // try {
-        //     addDoc(ref, state);
-        // } catch (err) {
-        //     console.log(err);
-        // }
-
-        alert('Votante guardado');
+        alert('Se ha creado su cuenta.');
         props.navigation.navigate('HomePrincipal');
     }
 
     return (
-        <ScrollView style={styles.container}>
-            <View style={styles.formGroup}>
-                <View style={styles.inputGroup}>
-                    <TextInput placeholder='DNI'
-                        onChangeText={(value) => setState({ ...state, dni: value })}
-                    />
+        <AlertNotificationRoot>
+            <ScrollView style={styles.container}>
+                <View style={styles.formGroup}>
+                    <View style={styles.inputGroup}>
+                        <TextInput placeholder='DNI'
+                            onChangeText={(value) => setState({ ...state, dni: value })}
+                        />
+                    </View>
+                    <View style={styles.inputGroup}>
+                        <TextInput placeholder='Nombre'
+                            onChangeText={(value) => setState({ ...state, nombre: value })}
+                        />
+                    </View>
+                    <View style={styles.inputGroup}>
+                        <TextInput placeholder='Apellidos'
+                            onChangeText={(value) => setState({ ...state, apellidos: value })}
+                        />
+                    </View>
+                    <View style={styles.inputGroup}>
+                        <TextInput placeholder='Edad'
+                            keyboardType='numeric'
+                            onChangeText={(value) => setState({ ...state, edad: value })}
+                        />
+                    </View>
+                    <View style={styles.inputGroup}>
+                        <TextInput placeholder='Correo'
+                            value={email}
+                            keyboardType='email-address'
+                            onChangeText={text => setEmail(text)}
+                        />
+                    </View>
+                    <View style={styles.inputGroup}>
+                        <TextInput placeholder='Contraseña' 
+                        secureTextEntry={true}
+                            value={password}
+                            onChangeText={text => setPassword(text)}
+                        />
+                    </View>
+                    <View style={styles.button}>
+                        <Button title="Guardar" onPress={() => saveNewUser()} />
+                    </View>
                 </View>
-                <View style={styles.inputGroup}>
-                    <TextInput placeholder='Nombre'
-                        onChangeText={(value) => setState({ ...state, nombre: value })}
-                    />
-                </View>
-                <View style={styles.inputGroup}>
-                    <TextInput placeholder='Apellidos'
-                        onChangeText={(value) => setState({ ...state, apellidos: value })}
-                    />
-                </View>
-                <View style={styles.inputGroup}>
-                    <TextInput placeholder='Edad'
-                        keyboardType='numeric'
-                        onChangeText={(value) => setState({ ...state, edad: value })}
-                    />
-                </View>
-                <View style={styles.inputGroup}>
-                    <TextInput placeholder='Correo'
-                        value={email}
-                        keyboardType='email-address'
-                        onChangeText={text => setEmail(text)}
-                    />
-                </View>
-                <View style={styles.inputGroup}>
-                    <TextInput secureTextEntry={true}
-                        value={password}
-                        onChangeText={text => setPassword(text)}
-                    />
-                </View>
-                <View style={styles.button}>
-                    <Button title="Guardar" onPress={() => saveNewUser()} />
-                </View>
-            </View>
-        </ScrollView>
+            </ScrollView>
+        </AlertNotificationRoot>
     )
 
 }

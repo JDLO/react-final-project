@@ -3,7 +3,9 @@ import * as RN from 'react-native';
 
 import { auth } from '../database/firebase';
 
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { ALERT_TYPE, Dialog, AlertNotificationRoot } from 'react-native-alert-notification';
+
 
 const LoginScreen = (props) => {
     const [email, setEmail] = useState('');
@@ -17,10 +19,17 @@ const LoginScreen = (props) => {
                 password
             ).then((userCredential) => {
                 console.log(userCredential.user);
-                props.navigation.navigate('HomePrincipal', {initial: true,});
+                props.navigation.navigate('HomePrincipal', { initial: true, });
             })
         } catch (error) {
             console.log(error);
+            console.log('ERROR');
+            Dialog.show({
+                type: ALERT_TYPE.WARNING,
+                title: 'Error',
+                textBody: '¡El inicio de sesión ha fallado! Por favor, verifica tus credenciales.',
+                button: 'Cerrar',
+            });
         };
     }
 
@@ -39,33 +48,37 @@ const LoginScreen = (props) => {
         });
 
         return () => unsubscribe();
-    }, []); // Empty dependency array means this effect runs once on mount
+    }, []);
+
+    
 
     return (
-        <RN.View style={styles.container}>
-            <RN.View style={styles.formGroup}>
-            <RN.View style={styles.inputGroup}>
-                    <RN.TextInput placeholder='Usuario'
-                        value={email}
-                        onChangeText={text => setEmail(text)}
-                        style={{ backgroundColor: '#F1F1F1', marginVertical: 10 }}
-                    />
-                </RN.View>
-                <RN.View style={styles.inputGroup}>
-                    <RN.TextInput secureTextEntry={true}
-                    placeholder='Contraseña'
-                        value={password}
-                        onChangeText={text => setPassword(text)}
-                        style={{ backgroundColor: '#F1F1F1', marginVertical: 10 }} />
-                </RN.View>
-                <RN.View style={styles.buttonGroup}>
-                    <RN.Button onPress={() => goToCreateVoterScreen()} title="Registrase" color="#29D02E" />
-                </RN.View>
-                <RN.View style={styles.buttonGroup}>
-                    <RN.Button onPress={emailSignIn} title="Iniciar sesión" />
+        <AlertNotificationRoot>
+            <RN.View style={styles.container}>
+                <RN.View style={styles.formGroup}>
+                    <RN.View style={styles.inputGroup}>
+                        <RN.TextInput placeholder='Usuario'
+                            value={email}
+                            onChangeText={text => setEmail(text)}
+                            style={{ backgroundColor: '#F1F1F1', marginVertical: 10 }}
+                        />
+                    </RN.View>
+                    <RN.View style={styles.inputGroup}>
+                        <RN.TextInput secureTextEntry={true}
+                            placeholder='Contraseña'
+                            value={password}
+                            onChangeText={text => setPassword(text)}
+                            style={{ backgroundColor: '#F1F1F1', marginVertical: 10 }} />
+                    </RN.View>
+                    <RN.View style={styles.buttonGroup}>
+                        <RN.Button onPress={() => goToCreateVoterScreen()} title="Registrase" color="#29D02E" />
+                    </RN.View>
+                    <RN.View style={styles.buttonGroup}>
+                        <RN.Button onPress={emailSignIn} title="Iniciar sesión" />
+                    </RN.View>
                 </RN.View>
             </RN.View>
-        </RN.View>
+        </AlertNotificationRoot>
     )
 }
 

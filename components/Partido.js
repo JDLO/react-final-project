@@ -4,6 +4,8 @@ import { database } from "../database/firebase";
 import { addDoc, collection, doc, updateDoc } from "@firebase/firestore";
 import { useState, useEffect } from "react";
 
+import { ALERT_TYPE, Dialog, AlertNotificationRoot } from 'react-native-alert-notification';
+
 
 export default function Partido({
     id,
@@ -30,8 +32,13 @@ export default function Partido({
         // setHaVotado(votante.data().hasVoted);
         console.log(haVotado);
         if (haVotado) {
-            console.log('No puedes votar')
-            alert('Ya has votado, no puedes votar nuevamente.');
+            console.log('No se puede votar')
+            Dialog.show({
+                type: ALERT_TYPE.WARNING,
+                title: 'Error',
+                textBody: 'Ya ha votado, no puede votar nuevamente.',
+                button: 'Cerrar',
+            });
             return;
         }
 
@@ -58,23 +65,30 @@ export default function Partido({
 
         //TODO Falta actualizar el boton si ya ha votado
 
-        alert('Votación realizada');
+        Dialog.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: 'Éxito',
+            textBody: 'Votación realizada, ¡gracias por su participación!',
+            button: 'Cerrar',
+        });
     }
 
     return (
-        <RN.View>
-            <RN.View style={styles.productContainer}>
-                <RN.View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <RN.Text style={styles.emoji}>{emoji}</RN.Text>
+        <AlertNotificationRoot>
+            <RN.View>
+                <RN.View style={styles.productContainer}>
+                    <RN.View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                        <RN.Text style={styles.emoji}>{emoji}</RN.Text>
+                    </RN.View>
+                    <RN.Text style={styles.name}>{nombre}</RN.Text>
+                    <RN.TouchableOpacity
+                        onPress={() => onVote()}
+                        style={styles.button}>
+                        <RN.Text style={styles.buttonText}>Votar</RN.Text>
+                    </RN.TouchableOpacity>
                 </RN.View>
-                <RN.Text style={styles.name}>{nombre}</RN.Text>
-                <RN.TouchableOpacity
-                    onPress={() => onVote()}
-                    style={styles.button}>
-                    <RN.Text style={styles.buttonText}>Votar</RN.Text>
-                </RN.TouchableOpacity>
             </RN.View>
-        </RN.View>
+        </AlertNotificationRoot>
     )
 }
 
