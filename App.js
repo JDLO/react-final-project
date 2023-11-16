@@ -8,6 +8,7 @@ import LoginScreen from "./screens/LoginScreen";
 import PoliticPartiesListScreen from "./screens/PoliticPartiesListScreen";
 import VotersListScreen from "./screens/VotersListScreen";
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import ResumeVotesListScreen from "./screens/ResumeVotesListScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -26,14 +27,19 @@ function HomeStack() {
 
         if (route.name === 'PoliticPartiesListScreen') {
           iconName = focused
-            ? 'file-tray-sharp'
-            : 'file-tray-outline';
+            ? 'flag-sharp'
+            : 'flag-outline';
         }
 
         if (route.name === 'VotersListScreen') {
           iconName = focused
-            ? 'person'
-            : 'person-outline';
+            ? 'people'
+            : 'people-outline';
+        }
+        if (route.name === 'ResumeVotesListScreen') {
+          iconName = focused
+            ? 'bar-chart'
+            : 'bar-chart-outline';
         }
 
         // You can return any component that you like here!
@@ -50,6 +56,9 @@ function HomeStack() {
       <Tab.Screen name="VotersListScreen"
         component={VotersListScreen}
         options={{ title: 'Votantes' }} />
+      <Tab.Screen name="ResumeVotesListScreen"
+        component={ResumeVotesListScreen}
+        options={{ title: 'Resumen de votos' }} />
     </Tab.Navigator>
   )
 }

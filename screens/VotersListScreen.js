@@ -13,16 +13,6 @@ const VotersListScreen = () => {
     const [voters, setVoters] = useState([]);
     const navigation = useNavigation();
 
-    React.useLayoutEffect(() => {
-        navigation.setOptions({
-          headerRight: () => (
-            <RN.View style={{marginEnd: 10, borderRadius: 10}}>
-                <RN.Button title="Agregar" onPress={() => navigation.navigate("CreateVoterScreen")} />
-            </RN.View>
-          ),
-        });
-      }, [navigation]);
-
     React.useEffect(() => {
         const unsubscribe = onSnapshot(collection(database, "votante"), (snapshot) => {
             setVoters(

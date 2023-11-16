@@ -1,38 +1,24 @@
+import { collection, getDocs, query, where } from '@firebase/firestore';
 import * as React from 'react';
+import { useEffect, useState } from "react";
 import * as RN from 'react-native';
-import { deleteDoc, doc, updateDoc } from 'firebase/firestore';
-import { AntDesign } from '@expo/vector-icons';
 import { database } from '../database/firebase';
 
-export default function Votante({
+export default function ResumeVotesPoliticParty({
     id,
-    dni,
     nombre,
-    apellidos,
-    edad
+    emoji,
+    votos
 }) {
-
-    const onDelete = () => {
-        const docRef = doc(database, 'votante', id);
-        deleteDoc(docRef);
-    }
-
-    const onEdit = () => {
-        const docRef = doc(database, 'votante', id);
-        // navigation.navigate("CreateVoterScreen")
-    }
 
     return (
         <RN.View>
             <RN.View style={styles.productContainer}>
-                {false && <RN.View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <RN.Text style={styles.name}>{dni}</RN.Text>
-                    <AntDesign onPress={onDelete} name="delete" size={24} color="black" />
-                    <AntDesign onPress={onEdit} name="edit" size={24} color="black" />
-                </RN.View>}
+                <RN.View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <RN.Text style={styles.emoji}>{emoji}</RN.Text>
+                </RN.View>
                 <RN.Text style={styles.name}>{nombre}</RN.Text>
-                <RN.Text style={styles.name}>{apellidos}</RN.Text>
-                <RN.Text style={styles.price}>{edad}</RN.Text>
+                <RN.Text style={styles.name}>Número de votos: {votos}</RN.Text>
             </RN.View>
         </RN.View>
     )
