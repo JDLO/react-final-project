@@ -30,7 +30,6 @@ export default function PoliticPartiesListScreen() {
             const unsubscribe = auth.onAuthStateChanged(async (user) => {
                 // Haz algo con el usuario (puede ser null si no hay usuario autenticado)
                 if (user) {
-                    console.log(user?.uid);
                     setUser(user); // Guarda el usuario en el estado
 
                     // Obtén el documento del votante
